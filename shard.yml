@@ -1,0 +1,9 @@
+---
+name: tmux.pane_movements
+version: 0.0.0
+authors:
+- Anatoly Chernov <chertoly@gmail.com>
+targets:
+  tmux.pane_movements:
+    main: src/bin/tmux.pane_movements.cr
+crystal: ">= 1.20.3"
