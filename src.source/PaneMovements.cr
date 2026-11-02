@@ -1,39 +1,56 @@
-def self.run(direction : Symbol) : Nil
-  tmux_direction, vim_direction, alt_key = case direction
-  when :left
-    {"-L", "h", "M-h"}
-  when :lower
-    {"-D", "j", "M-j"}
-  when :right
-    {"-R", "l", "M-l"}
-  when :upper
-    {"-U", "k", "M-k"}
-  else
-    raise ArgumentError.new("Unknown pane movement direction: #{direction}")
-  end
+MOVEMENTS = {
+  :left  => {tmux: "-L", vim: "h", alt: "M-h"},
+  :lower => {tmux: "-D", vim: "j", alt: "M-j"},
+  :right => {tmux: "-R", vim: "l", alt: "M-l"},
+  :upper => {tmux: "-U", vim: "k", alt: "M-k"},
+}
 
+def self.run(direction : Symbol) : Nil
+  movement = movement_for(direction)
   pane_id = target_pane_id
-  metadata = tmux([
+  application, pane_count = pane_details(pane_id)
+
+  if pane_count > 1
+    move_to_tmux_pane(pane_id, movement.tmux)
+  else
+    move_in_application(pane_id, application, movement)
+  end
+end
+
+private def self.movement_for(direction : Symbol)
+  MOVEMENTS[direction]? || raise ArgumentError.new("Unknown pane movement direction: #{direction}")
+end
+
+private def self.pane_details(pane_id : String) : Tuple(String, Int32)
+  fields = tmux([
     "display-message",
     "-p",
     "-t", pane_id,
     "\#{pane_current_command}\t\#{window_panes}"
-  ]).strip
+  ]).strip.split('\t', 2)
 
-  fields = metadata.split('\t', 2)
   unless fields.size == 2
-    raise "Unexpected tmux pane metadata: #{metadata.inspect}"
+    raise "Unexpected tmux pane metadata: #{fields.inspect}"
   end
 
-  current_command = File.basename(fields[0])
-  pane_count = fields[1].to_i
+  pane_count = fields[1].to_i?
+  raise "Invalid pane count in tmux metadata: #{fields[1].inspect}" unless pane_count
 
-  if pane_count == 1
-    keys = vim_or_neovim?(current_command) ? ["C-w", vim_direction] : [alt_key]
-    tmux(["send-keys", "-t", pane_id] + keys)
+  {File.basename(fields[0]), pane_count}
+end
+
+private def self.move_to_tmux_pane(pane_id : String, direction : String) : Nil
+  tmux(["select-pane", "-t", pane_id, direction])
+end
+
+private def self.move_in_application(pane_id : String, application : String, movement) : Nil
+  keys = if vim_or_neovim?(application)
+    ["C-w", movement.vim]
   else
-    tmux(["select-pane", "-t", pane_id, tmux_direction])
+    [movement.alt]
   end
+
+  tmux(["send-keys", "-t", pane_id] + keys)
 end
 
 private def self.target_pane_id : String
