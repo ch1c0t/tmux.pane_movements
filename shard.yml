@@ -4,8 +4,6 @@ version: 0.0.0
 authors:
 - Anatoly Chernov <chertoly@gmail.com>
 targets:
-  tmux.pane_movements:
-    main: src/bin/tmux.pane_movements.cr
   to-left-pane:
     main: src/bin/to-left-pane.cr
   to-lower-pane:

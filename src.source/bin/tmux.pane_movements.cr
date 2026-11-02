@@ -1,1 +1,0 @@
-puts "tmux.pane_movements is made with Crystal."
