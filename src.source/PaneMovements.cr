@@ -10,10 +10,10 @@ def self.run(direction : Symbol) : Nil
   pane_id = target_pane_id
   application, pane_count = pane_details(pane_id)
 
-  if pane_count > 1
-    move_to_tmux_pane(pane_id, movement.tmux)
-  else
+  if pane_count == 1
     move_in_application(pane_id, application, movement)
+  else
+    move_to_tmux_pane(pane_id, movement.tmux)
   end
 end
 
