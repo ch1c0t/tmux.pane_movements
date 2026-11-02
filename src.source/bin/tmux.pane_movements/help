@@ -1,1 +1,10 @@
-tmux.pane_movements is a CLI made with Crystal.
+tmux.pane_movements provides four pane-navigation executables:
+
+  to-left-pane
+  to-lower-pane
+  to-right-pane
+  to-upper-pane
+
+When the current window has multiple panes, they select the adjacent tmux pane.
+In a single-pane window, they send Ctrl-W plus the direction to Vim/Neovim, or
+forward the corresponding Alt chord to other applications.

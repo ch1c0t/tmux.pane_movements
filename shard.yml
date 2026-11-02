@@ -6,4 +6,12 @@ authors:
 targets:
   tmux.pane_movements:
     main: src/bin/tmux.pane_movements.cr
+  to-left-pane:
+    main: src/bin/to-left-pane.cr
+  to-lower-pane:
+    main: src/bin/to-lower-pane.cr
+  to-right-pane:
+    main: src/bin/to-right-pane.cr
+  to-upper-pane:
+    main: src/bin/to-upper-pane.cr
 crystal: ">= 1.20.3"
