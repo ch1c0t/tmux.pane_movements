@@ -10,6 +10,6 @@ end
 describe 'cli' do
   it 'prints a help message' do
     stdout = cli '--help'
-    expect(stdout.first).to start_with 'tmux.pane_movements is'
+    expect(stdout.first).to start_with 'tmux.pane_movements provides'
   end
 end
