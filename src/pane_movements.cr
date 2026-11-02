@@ -4,10 +4,10 @@ module PaneMovements
     pane_id = Tmux.target_pane_id
     pane = Tmux.pane_details(pane_id)
 
-    if pane.pane_count == 1
-      Tmux.send_keys(pane_id, Application.keys_for(pane.application, movement))
+    if pane[:pane_count] == 1
+      Tmux.send_keys(pane_id, Application.keys_for(pane[:application], movement))
     else
-      Tmux.select_pane(pane_id, movement.tmux)
+      Tmux.select_pane(pane_id, movement[:tmux])
     end
   end
 
@@ -29,9 +29,9 @@ module PaneMovements
   module Application
     def self.keys_for(application : String, movement : Movement::Definition) : Array(String)
       if vim_or_neovim?(application)
-        ["C-w", movement.vim_key]
+        ["C-w", movement[:vim_key]]
       else
-        [movement.alt_key]
+        [movement[:alt_key]]
       end
     end
 
