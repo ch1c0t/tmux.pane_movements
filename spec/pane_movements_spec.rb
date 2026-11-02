@@ -1,5 +1,6 @@
 require_relative 'cli/helper'
 require 'tmpdir'
+require 'fileutils'
 
 RSpec.describe 'pane movement executables' do
   DIRECTIONS = {
@@ -16,7 +17,7 @@ RSpec.describe 'pane movement executables' do
       log = File.join(directory, 'tmux.log')
       fake_tmux = File.join(fake_bin, 'tmux')
 
-      File.write(fake_tmux, <<~SH)
+      File.write(fake_tmux, <<~'SH')
         #!/bin/sh
         printf '%s' "$1" >> "$TMUX_TEST_LOG"
         shift
