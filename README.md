@@ -32,3 +32,8 @@ The target pane comes from `TMUX_PANE`; when that variable is unavailable,
 the executable asks tmux for its current pane. Pane metadata and key commands
 are explicitly targeted at that pane, so the pane count is scoped to its
 window rather than relying on tmux's implicit default target.
+
+When the foreground command is `tmux.repl.input`, the lower and upper bindings
+forward Alt+J/K to the input process even in a multi-pane window. This lets the
+REPL use those keys as input-selection aliases without breaking pane movement
+for other applications.
