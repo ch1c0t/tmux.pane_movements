@@ -75,4 +75,14 @@ RSpec.describe 'pane movement executables' do
       end
     end
   end
+
+  it 'forwards Alt+J/K to the REPL input pane even when other panes exist' do
+    {
+      'to-lower-pane' => 'M-j',
+      'to-upper-pane' => 'M-k'
+    }.each do |executable, alt_key|
+      commands = invoke(executable, command: 'tmux.repl.input', pane_count: 2)
+      expect(commands.last).to eq(['send-keys', '-t', '%42', alt_key])
+    end
+  end
 end
